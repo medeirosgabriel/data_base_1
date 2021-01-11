@@ -34,15 +34,11 @@ from (select count(*) as  mycount
 	GROUP by w.pno) r;
 
 -- Questão 7
-select pnumber, qtd
-from (select pr.pnumber, count(*) as  qtd
-      from works_on w, project pr
-      where w.pno = pr.pnumber
-      GROUP by pr.pnumber) r
-where r.qtd <= all (select count(*) as  qtd
-                    from works_on w, project pr
-                    where w.pno = pr.pnumber
-                    GROUP by pr.pnumber);
+select pno as num_proj, qtd_func
+from (select w.pno, count(*) as  qtd_func
+      from works_on w
+      GROUP by w.pno) r
+where r.qtd_func <= all (select count(*) as qtd from works_on w GROUP by w.pno);
 
 
 -- Questão 8
@@ -65,17 +61,17 @@ where salary > all (select e.salary
                     where e.ssn = w.essn and w.pno = 92)
 
 -- Questão 11
-select ssn, count(pno) as qtd_proj
-from employee e left join works_on w on e.ssn = w.essn
-group by e.ssn
-order by qtd_proj
+select w.essn as ssn, count(*) as qtd_proj
+from works_on w
+group by w.essn
+order by count(*)
 
 -- Questão 12
-SELECT w.pno, count(w.essn)
-from works_on w
+SELECT w.pno, count(*)
+from works_on w right join employee e on w.essn = e.ssn
 group by w.pno
-having count(w.essn) < 5
-order by count (w.essn)
+having count(*) < 5
+order by count (*)
 
 -- Questão 13.1
 select fname
